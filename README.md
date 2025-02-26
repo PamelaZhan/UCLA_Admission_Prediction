@@ -1,7 +1,7 @@
 # Predicting Chances of Admission at UCLA
 This app has been built using Streamlit and deployed with Streamlit community cloud
 
-[Visit the app here](https://UCLA_Admission_Prediction.streamlit.app/)
+[Visit the app here](https://ucla-admission-prediction.streamlit.app/)
 
 This application predicts chances of admission into the University of California, Los Angeles (UCLA). The predicted output gives students a fair idea about their chances of getting accepted. Accuracy of 90% and above.
 
