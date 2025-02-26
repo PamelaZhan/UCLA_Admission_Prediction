@@ -1,31 +1,36 @@
 from sklearn.model_selection import train_test_split
-# import decision tree model
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import mean_absolute_error
+# import scaler for transforming variables to range [0, 1]
+from sklearn.preprocessing import MinMaxScaler
+# import MLPClassifier for classification tasks, MLP (Multi-layer Perceptron)
+from sklearn.neural_network import MLPClassifier
 import pickle
 from ..logging.logging import logging_decorator
 
 @logging_decorator
 # Function to train the model
-def train_DTmodel(x, y):
+def train_MLPmodel(x, y):
     # Splitting the data into training and testing sets
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, stratify=x.property_type_Bunglow)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=123)
 
-    # create an instance of the Decision Tree class
-    model = DecisionTreeRegressor(max_depth=3, max_features=10, random_state=567)
+    # transform xtrain and xtest using MinMaxScaler, scale data into 0--1
+    scaler = MinMaxScaler() 
+    x_train_scaled = scaler.fit_transform(x_train)
+    x_test_scaled = scaler.transform(x_test)
 
-    # train the model
-    dtmodel = model.fit(x_train, y_train)
+    # create a instance of MLPClassifier. 2 hidder layers, each layer with 2 neurons
+    MLP_model = MLPClassifier(hidden_layer_sizes=(2,2), batch_size=50, max_iter=200)  
 
-    # make predictions using the train set
-    ytrain_pred = dtmodel.predict(x_train)
-    # evaluate the model
-    train_mae = mean_absolute_error(ytrain_pred, y_train)
+    # train the model. 
+    MLP_model.fit(x_train_scaled,y_train)
        
     # Save the trained model
-    with open('models/DTmodel.pkl', 'wb') as f:
-        pickle.dump(dtmodel, f)
+    with open('models/MLPmodel.pkl', 'wb') as f:
+        pickle.dump(MLP_model, f)
 
-    return dtmodel, x_test, y_test
+    # Save the scaler to a file
+    with open('models/scaler.pkl', 'wb') as f:
+        pickle.dump(scaler, f)
+
+    return MLP_model, x_test_scaled, y_test
 
 

@@ -1,14 +1,18 @@
 # Import accuracy score
-from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix
 from ..logging.logging import logging_decorator
 
 @logging_decorator
 # # Function to predict and evaluate
-def evaluate_model(model, x_test, y_test):
-    # Predict the property price on the testing set
-    y_pred = model.predict(x_test)
+def evaluate_model(MLP_model, x_test_scaled, y_test):
 
-    # evaluate the model
-    mae = mean_absolute_error(y_pred, y_test)
+    # Make Predictions
+    y_pred = MLP_model.predict(x_test_scaled)
 
-    return mae
+    # calculate confusion matrix
+    confusion_mat = confusion_matrix(y_test, y_pred)
+    # calculate accuracy of the model
+    accuracy = accuracy_score(y_test, y_pred)
+
+
+    return accuracy, confusion_mat

@@ -1,29 +1,26 @@
-# real_estate_price_application
+# Predicting Chances of Admission at UCLA
 This app has been built using Streamlit and deployed with Streamlit community cloud
 
-[Visit the app here](https://real-estate-price-predictor-app.streamlit.app/)
+[Visit the app here](https://UCLA_Admission_Prediction.streamlit.app/)
 
-This application predicts the fair transaction price of a property before it's sold within a small county in New York state based on a dataset for transaction prices for previously sold properties on the market. The model aims to predict transaction prices with an average error of under $70,000.
+This application predicts chances of admission into the University of California, Los Angeles (UCLA). The predicted output gives students a fair idea about their chances of getting accepted. Accuracy of 90% and above.
 
 ## Features
 - User-friendly interface powered by Streamlit.
-- Input form to enter details such as property_tax, insurance, beds, baths, Bunglow/Condo, and other relevant factors.
-- Real-time prediction of property price based on the trained model. Mean Absolute Error (MAE) < $70,000
+- Input form to enter details such as GRE Score, TOEFL Score, SOP, LOR, and other relevant factors.
+- Real-time prediction of admission chance, Accuracy of 90% and above.
 - Accessible via Streamlit Community Cloud.
 
 ## Dataset
-The application is trained on the **Real Estate dataset**, a dataset of transaction prices for previously sold properties on the market. It includes features like:
-- Year_sold
-- Property_tax
-- Insurance
-- Beds
-- Baths
-- Sqft
-- Year_built
-- Lot_size
-- Basement
-- Property_type
-- And other factors influencing price.
+The application is trained on the **current admission dataset**. It includes features like:
+- GRE_Score: (out of 340)
+- TOEFL_Score: (out of 120)
+- University_Rating: It indicates the Bachelor University ranking (out of 5)
+- SOP: Statement of Purpose Strength (out of 5)
+- LOR: Letter of Recommendation Strength (out of 5)
+- CGPA: Student's Undergraduate GPA(out of 10)
+- Research: Whether the student has Research Experience (either 0 or 1)
+- Admit_Chance: (ranging from 0 to 1)
 
 
 ## Technologies Used
@@ -33,7 +30,7 @@ The application is trained on the **Real Estate dataset**, a dataset of transact
 - **Matplotlib** and **Seaborn**: For exploratory data analysis and visualization (if applicable).
 
 ## Model
-The predictive model is trained using the real estate dataset. It applies preprocessing steps like adding domain features and encoding categorical variables. The Decision Tree regression model is used.
+The predictive model is trained using the current admission dataset. A classification model using Neural Networks is trained and utilized to predict.
 
 
-#### Thank you for using the Real Estate Price Application! Feel free to share your feedback.
+#### Thank you for using the UCLA Admission Prediction Application! Feel free to share your feedback.

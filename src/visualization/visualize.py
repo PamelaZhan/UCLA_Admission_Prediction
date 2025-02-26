@@ -5,18 +5,19 @@ from sklearn import tree
 from ..logging.logging import logging_decorator
 
 @logging_decorator
-def plot_correlation_heatmap(data):
-    """
-    Plot a correlation heatmap for the given data.
+# Plotting loss curve
+def plot_loss_curve(MLPmodel):
     
-    Args:
-        data (pandas.DataFrame): The input data.
-    """
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(data.corr()*100, annot=True, fmt='.0f', cmap='RdBu_r')
-    plt.title('Correlation Heatmap', fontsize=16)
-    # Save the plot to a file
-    plt.savefig('heatmap.png', dpi=300)
+    loss_values = MLPmodel.loss_curve_
+    # Plotting the loss curve
+    plt.figure(figsize=(10, 6))
+    plt.plot(loss_values, label='Loss', color='blue')
+    plt.title('Loss Curve')
+    plt.xlabel('Iterations')
+    plt.ylabel('Loss') 
+    plt.grid(True)
+    # save the plot to a file
+    plt.savefig('loss_curve.png', dpi=300)
     # Show the plot
     plt.show()
 
@@ -41,19 +42,4 @@ def plot_feature_importance(model, x):
     # Show the plot
     plt.show()
 
-@logging_decorator
-def plot_decision_tree(model):
-    """
-    Plot a decision tree for the model.
-    
-    Args:
-        model: trained decision tree model.
-    """
-    fig, ax = plt.subplots()      
-    # Plot the tree with feature names
-    ax =tree.plot_tree(model, feature_names=model.feature_names_in_, filled = True)
-    plt.tight_layout()
-    # Save the plot to a file
-    fig.savefig('tree.png', dpi=300)    
-    # Show the plot
-    plt.show()
+

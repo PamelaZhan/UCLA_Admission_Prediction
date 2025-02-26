@@ -1,101 +1,90 @@
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import pickle
 import streamlit as st
 
 # Set the page title and description
-st.title("Real Estate Price Predictor")
+st.title("UCLA Admission Prediction Appication")
 st.write("""
-This app predicts a real estate price 
-based on various property characteristics.
+This app predicts chances of admission into the University of California, Los Angeles (UCLA) 
+based on student's profile.
 """)
 
 # Load the pre-trained model
-with open("models/DTmodel.pkl", "rb") as pkl:
-    dt_model = pickle.load(pkl)
+with open("models/MLPmodel.pkl", "rb") as pkl:
+    MLP_model = pickle.load(pkl)
+# Load the pre-fit scaler 
+with open('models/scaler.pkl', 'rb') as f:
+    scaler=pickle.load(f)
 
 
 # Prepare the form to collect user inputs
 with st.form("user_inputs"):
-    st.subheader("Real Estate Details")
+    st.subheader("Student Profile")
     
-    # Year Sold 
-    year_sold = st.slider("Select transaction year", min_value=1990, max_value=2025)
+    # GRE Score 
+    gre = st.slider("GRE Score", min_value=290, max_value=340)
     
-    # Property Tax
-    property_tax = st.number_input("Property Tax",value=0)
+    # TOFEL Score
+    tofel = st.slider("TOFEL Score", min_value=90, max_value=120)
 
-    # Insurance
-    insurance = st.number_input("Insurance",value=0)
+    # University Rating
+    uni_rating = st.selectbox("University Rating", ["1", "2", "3", "4", "5"])
 
-    # Beds
-    beds = st.selectbox("Number of bedrooms", ["1", "2", "3", "4", "5"])
+    # SOP
+    sop = st.number_input("Statement of Purpose Strength", min_value=1.0, max_value=5.0, step=0.1)
 
-    # Baths
-    baths = st.selectbox("Number of bathrooms", ["1", "2", "3", "4", "5", "6"])
+    # LOR
+    lor = st.number_input("Letter of Recommendation Strength", min_value=1.0, max_value=5.0, step=0.1)
 
-    # sqft
-    sqft = st.number_input("Sqft of the property", min_value=500, max_value=9000)
+    # CGPA score
+    cgpa = st.number_input("Undergraduate GPA", min_value=6.0, max_value=10.0, step=0.01)
 
-    # Year Built
-    year_built = st.slider("Select built year", min_value=1880, max_value=2025)
-    
-    # Lot Size
-    lot_size = st.number_input("Lot Size", min_value=0, max_value=500000, value=0)
-    
-    # Basement
-    basement = st.selectbox("Basement", options=["1", "0"])
-    
-    # Property Type
-    property_type = st.selectbox("Property Type", options=["Bunglow", "Condo"])
+    #Research Experience
+    research = st.selectbox("Have Research Experience?", ["Yes", "No"])
     
     # Submit button
-    submitted = st.form_submit_button("Predict Property Price")
+    submitted = st.form_submit_button("Predict Admission Chance")
 
 
 # Handle the dummy variables to pass to the model
 if submitted:
-    # convert to integers
-    year_sold = int(year_sold)
-    property_tax = int(property_tax)
-    insurance = int(insurance)
-    beds = int(beds)
-    baths = int(baths)
-    sqft = int(sqft)
-    year_built = int(year_built)
-    lot_size = int(lot_size)
-    basement =int(basement)
-    if year_built > year_sold:
-        st.write("The year built cannot greater than the year sold. Try again.")
-        st.stop()
+    # convert to number
+    GRE_Score = int(gre)
+    TOEFL_Score = int(tofel)
+    SOP = float(sop)
+    LOR = float(lor)
+    CGPA = float(cgpa)               
 
     # deal dummy feature
-    property_type_Bunglow = 1 if property_type == "Bunglow" else 0
-    property_type_Condo = 1 if property_type == "Condo" else 0
-    
-    popular = 1 if beds == 2 and baths == 2 else 0
-    recession = 1 if (year_sold >= 2010) and (year_sold<=2013) else 0
-    property_age = year_sold - year_built
+    University_Rating_1 = 1 if uni_rating == "1" else 0
+    University_Rating_2 = 1 if uni_rating == "2" else 0
+    University_Rating_3 = 1 if uni_rating == "3" else 0
+    University_Rating_4 = 1 if uni_rating == "4" else 0
+    University_Rating_5 = 1 if uni_rating == "5" else 0
+
+    Research_0 = 1 if research == "No" else 0
+    Research_1 = 1 if research == "Yes" else 0
 
 
     # Prepare the input for prediction. This has to go in the same order as it was trained
-    prediction_input = pd.DataFrame([[year_sold, property_tax, insurance, beds, baths, sqft, year_built, lot_size, 
-                                     basement, popular, recession, property_age, property_type_Bunglow, property_type_Condo]], 
-                           columns=["year_sold", "property_tax", "insurance", "beds", "baths", "sqft", "year_built", "lot_size", 
-                                    "basement", "popular", "recession", "property_age", "property_type_Bunglow", "property_type_Condo"]
+    prediction_input = pd.DataFrame([[GRE_Score,TOEFL_Score,SOP,LOR,CGPA,
+                University_Rating_1,University_Rating_2,University_Rating_3,University_Rating_4,
+                University_Rating_5,Research_0,Research_1]]
     )
 
+    # Scale the input
+    input_scaled = scaler.transform(prediction_input)
     # Make prediction
-    new_prediction = dt_model.predict(prediction_input)
+    new_prediction = MLP_model.predict(input_scaled)
 
     # Display result
     st.subheader("Prediction Result:")
-    st.write(f"The predicted price is: ${new_prediction[0]}")
-    
+    if new_prediction[0] == 1:
+        st.write("Congraduation! You got the offer!")
+    else:
+        st.write("Sorry, you are not eligible.")
 
 st.write(
-    """We used a machine learning (Decistion Tree) model to predict your property price,
-    the features used in this prediction are ranked by relative importance below."""
+    """We used a Neural Networks to predict the chance of successful admission."""
 )
-st.image("feature_importance.png")
+
