@@ -1,7 +1,7 @@
 
 from src.data.load_dataset import load_and_preprocess_data
 from src.features.build_features import trans_features
-from src.visualization.visualize import plot_loss_curve
+from src.visualization.visualize import plot_loss_curve, plot_confusion_matrix
 from src.models.train_model import train_MLPmodel
 from src.models.predict_model import evaluate_model
 import pandas as pd
@@ -26,6 +26,7 @@ if __name__ == "__main__":
         print(f"Confusion Matrix:\n{confusion_mat}")
         # Plot
         plot_loss_curve(MLPmodel)
+        plot_confusion_matrix(confusion_mat,['Admitted', 'Not Admitted'])
     else:
         print(f"The accuracy is {accuracy}, not good enough.")
 

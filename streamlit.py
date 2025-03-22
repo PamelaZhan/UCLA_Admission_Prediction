@@ -87,4 +87,4 @@ if submitted:
 st.write(
     """We used a Neural Networks to predict the chance of successful admission."""
 )
-
+st.image('confusion_matrix.png')
