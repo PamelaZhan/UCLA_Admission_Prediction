@@ -30,7 +30,6 @@ The application is trained on the **current admission dataset**. It includes fea
 - **Matplotlib** and **Seaborn**: For exploratory data analysis and visualization (if applicable).
 
 ## Model
-The predictive model is trained using the current admission dataset. A classification model using Neural Networks is trained and utilized to predict.
-
+A neural network classifier MLP(multi-layer perceptron) model is trained and utilized to predict the admit chance.
 
 #### Thank you for using the UCLA Admission Prediction Application! Feel free to share your feedback.
